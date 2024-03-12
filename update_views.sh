@@ -18,7 +18,7 @@ for dataset_dir in */ ; do
       sql=$(cat "${view_sql}")
       echo "${sql}"
       # Use bq query to execute the SQL for creating/updating the view
-      bq query --use_legacy_sql=false --project_id="eu-medico-residente" --replace=true '${sql}'
+      bq query --use_legacy_sql=false --project_id="eu-medico-residente" --replace=true "${sql}"
       
       if [ $? -eq 0 ]; then
         echo "Successfully updated view: ${full_view_path}"
