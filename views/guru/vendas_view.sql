@@ -3,4 +3,4 @@ OPTIONS(
 description="the latest representation of each cart"
 )
 as
-select * from `<project_id>.guru.vendas` limit 1000
+select * from `<project_id>.guru.vendas` limit 100
