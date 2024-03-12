@@ -1,31 +1,23 @@
 #!/bin/bash
 
-# Iterate over dataset directories
+project="eu-medico-residente"
+
 for dataset_dir in */ ; do
-  dataset=${dataset_dir%/}  # Remove trailing slash from dataset directory name
+  dataset=${dataset_dir%/}  # Remove trailing slash
   
-  # Check for 'views' subdirectory and process SQL files
-  if [ -d "$dataset/views" ]; then
-    for view_sql in "$dataset/views/"*.sql; do
-      view_name=$(basename "${view_sql}" .sql)  # Extract view name from file name
-      
-      echo "Updating view ${view_name} in dataset ${dataset}..."
-      
-      # Construct the full path for the dataset and view
-      full_view_path="eu-medico-residente.${dataset}.${view_name}"
-      
-      # Read SQL query from file
-      sql=$(cat "${view_sql}")
-      echo "${sql}"
-      # Use bq query to execute the SQL for creating/updating the view
-      bq query --use_legacy_sql=false --project_id="eu-medico-residente" --replace=true "${sql}"
-      
-      if [ $? -eq 0 ]; then
-        echo "Successfully updated view: ${full_view_path}"
-      else
-        echo "Failed to update view: ${full_view_path}"
-        exit 1
-      fi
-    done
-  fi
+  # Update regular views
+  for view_sql in "$dataset/views/"*.sql; do
+    view_name=${view_sql##*/}
+    view_name=${view_name%.sql}
+    echo "Updating view $view_name in dataset $dataset..."
+    bq query --use_legacy_sql=false --replace=true --project_id=$project --dataset_id=$dataset --view="$(cat $view_sql)"
+  done
+  
+  # Materialize views
+  for mview_sql in "$dataset/materialized_views/"*.sql; do
+    mview_name=${mview_sql##*/}
+    mview_name=${mview_name%.sql}
+    echo "Materializing view $mview_name in dataset $dataset..."
+    bq query --use_legacy_sql=false --replace=true --display_name=$mview_name --schedule='every 24 hours' --project_id=$project --destination_table=$dataset.$mview_name "$(cat $mview_sql)"
+  done
 done
