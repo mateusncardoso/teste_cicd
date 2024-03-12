@@ -1,4 +1,5 @@
-5create or replace view `eu-medico-residente.guru.vendas_view`
+
+create or replace view `eu-medico-residente.guru.vendas_view`
 OPTIONS(
 description="the latest representation of each cart"
 )
