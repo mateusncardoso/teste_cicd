@@ -1,0 +1,9 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        chmod +x ./update_views.sh
+        ./update_views.sh
+    id: 'Update BigQuery Views'
