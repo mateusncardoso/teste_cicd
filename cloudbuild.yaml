@@ -8,3 +8,4 @@ steps:
 timeout: 1200s
 substitutions:
   _VIEWS_DIR: views
+serviceAccount: 'projects/eu-medico-residente/serviceAccounts/eu-medico-residente@appspot.gserviceaccount.com'
