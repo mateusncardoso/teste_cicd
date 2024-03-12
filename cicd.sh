@@ -2,7 +2,7 @@
 #./cicd.sh my-project-id views EU
 project_id=$1
 views_dir=$2
-location=${3:-EU}  
+location=${3:-US}  
 
 bq_safe_mk() {
     dataset=$1
